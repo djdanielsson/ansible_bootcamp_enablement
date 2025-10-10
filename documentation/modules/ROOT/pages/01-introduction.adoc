@@ -1,3 +1,88 @@
-= Introduction
+= Lab: Introduction to Ansible Bootcamp
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+[abstract]
+Welcome to the Red Hat Ansible Automation Platform Bootcamp! This comprehensive workshop will guide you through the fundamentals of automation with Ansible, from basic concepts to advanced enterprise deployment scenarios.
+
+== 1. Introduction: What is Ansible?
+
+Ansible is an open-source automation tool that simplifies IT orchestration, configuration management, and application deployment. It uses a simple, human-readable language (YAML) to describe automation jobs, and requires no special coding skills to get started.
+
+.Why Ansible?
+
+. **Agentless**: No agents to install on managed nodes
+. **Idempotent**: Run the same automation multiple times safely
+. **Simple**: Human-readable YAML syntax
+. **Extensible**: Thousands of community modules and collections
+. **Enterprise Ready**: Backed by Red Hat with enterprise support
+
+== 2. Lab Overview: What You'll Learn
+
+This bootcamp consists of 8 progressive labs that build upon each other:
+
+. **Lab 1 (This Lab)**: Introduction and setup
+. **Lab 2**: Ansible Automation Platform on Azure
+. **Lab 3**: Developer Tools and DevSpaces
+. **Lab 4**: Configuration as Code
+. **Lab 5**: Test-Driven Development with Molecule
+. **Lab 6**: Managing Content with Private Automation Hub
+. **Lab 7**: CI/CD Pipeline Creation
+. **Lab 8**: AAP on OpenShift Container Platform
+
+Each lab focuses on practical, hands-on learning with real-world scenarios.
+
+== 3. Prerequisites: Before You Begin
+
+Before starting this bootcamp, ensure you have:
+
+. Access to a Red Hat account
+. Basic understanding of Linux command line
+. Familiarity with YAML syntax (helpful but not required)
+. A web browser for accessing lab environments
+
+NOTE: All lab environments are pre-configured with the necessary tools and access credentials.
+
+== 4. Lab Environment Setup
+
+Your lab environment includes:
+
+. **DevSpaces**: Cloud-based IDE for development
+. **OpenShift Container Platform**: Kubernetes platform for containerized applications
+. **Ansible Automation Platform**: Enterprise automation platform
+. **Private Automation Hub**: Content management and distribution
+. **Gitea**: Git repository hosting
+
+=== Step 4.1: Accessing Your Lab Environment
+
+. Open your browser and navigate to the provided lab URL
+. Log in with the credentials provided by your instructor
+. Familiarize yourself with the lab interface and available tools
+
+=== Step 4.2: Opening DevSpaces
+
+[source,bash,role=execute]
+----
+# Navigate to DevSpaces in your OpenShift console
+# Click "Create Workspace" or access existing workspace
+# Select the ansible-bootcamp workspace
+----
+
+== 5. Getting Help and Support
+
+Throughout this bootcamp, you have several resources available:
+
+. **Lab Instructions**: Detailed step-by-step guides for each lab
+. **Documentation Links**: Official Ansible and Red Hat documentation
+. **Instructor Support**: Ask questions during lab sessions
+. **Community Resources**: Ansible forums and documentation
+
+== 6. Conclusion
+
+You are now ready to begin your Ansible automation journey! This bootcamp will take you from Ansible fundamentals to enterprise-grade automation deployments. Remember to work through the labs sequentially, as each builds upon the previous one.
+
+Take your time, experiment with the concepts, and don't hesitate to ask for help when needed. Happy automating!
+
+== 7. Helpful Links
+
+. https://docs.ansible.com/[Ansible Documentation]
+. https://access.redhat.com/products/red-hat-ansible-automation-platform[Red Hat Ansible Automation Platform]
+. https://www.redhat.com/en/technologies/management/ansible[Ansible Overview]

@@ -1,40 +1,58 @@
 = Lab: Creating a CI/CD Pipeline
 
-== 1. Prerequisites
+[abstract]
+One of the core goals of automation is automating a process end-to-end. This lab focuses on creating a CI/CD pipeline for Ansible collection builds and updates, automating the development lifecycle from code to production.
 
-.Particpants should have
+== 1. Introduction: CI/CD for Ansible Collections
 
-. Completed the Ansible Bootcamp Lab: xref:06-managing-content-automation-hub.adoc[Managing Ansible Content with Private Automation Hub]
+This lab demonstrates how to implement continuous integration and deployment for Ansible automation content using Tekton pipelines on OpenShift.
 
-== 2. Introduction
+.Why CI/CD for Ansible?
 
-One of the core goals of automation is automating a process end-to-end, in this case it's creating a CI/CD pipeline for Ansible collection builds and updates. This lab will further the development of one of the previous labs, by automating the build and publishing of the development lifecycle of an Ansible collection.
+. **Automated Testing**: Ensure quality through automated linting and testing
+. **Consistent Deployment**: Standardized build and publishing process
+. **Version Control**: Track changes and rollbacks
+. **Collaboration**: Enable team workflows with code reviews and approvals
 
-Upon completion of this lab you will have 
+== 2. Prerequisites: Before You Begin
 
-. A Tekton pipeline running in OpenShift
-. The pipeline can be triggered from a push to the collection repo
-. The pipeline will lint, build, publish and approve the collection into Private Automation Hub
+Before starting this lab, ensure you have completed:
 
-== 3. Lab Setup: Configuring Your Environment
+. xref:06-managing-content-automation-hub.adoc[Lab 6: Managing Ansible Content with Private Automation Hub]
+. Access to OpenShift cluster with Tekton installed
+. A collection repository in Gitea
+. Private Automation Hub access with publishing permissions
 
+NOTE: This lab builds directly upon the work completed in Lab 6.
 
-.Prior to starting the lab, ensure the following tools and services are set up:
+== 3. Lab Setup: Environment Preparation
+
+Ensure your environment is properly configured before building the CI/CD pipeline.
+
+=== Step 3.1: Verify Prerequisites
 
 . Repository for the *ansible_bootcamp_my_collection* is created on Gitea
-. You have access to your dev-spaces workspace for your enviornment
+. You have access to your DevSpaces workspace
 . Make sure the Gitea repository is *public*
-. Commit the collection 
+. Commit and push your collection code to the repository
 
 NOTE: Lab setup should have been previously completed in xref:06-managing-content-automation-hub.adoc[Managing Ansible Content with Private Automation Hub]
 
-== 4. Lab: CI/CD Pipeline
+=== Step 3.2: Access DevSpaces Terminal
 
-In this section, we'll share how to apply the *collection-pipeline.yml* in your OpenShift environment. Also, creating a Cluster Trigger Binding, and then setting up your Ansible Collection repository webhook. 
+[source,bash,role=execute]
+----
+# Open terminal in DevSpaces
+# Navigate to your workspace directory
+cd /projects/ansible-bootcamp
+----
 
-=== 4.1: Create CI/CD Pipeline Repository
+== 4. Creating CI/CD Pipeline Repository
 
-[abstract]
+In this section, we'll create a separate repository for our CI/CD pipeline configuration.
+
+=== Step 4.1: Create Pipeline Repository
+
 Create another repository separate from the _ansible_bootcamp_my_collection_ repository that is created in xref:06-managing-content-automation-hub.adoc[Managing Ansible Content with Private Automation Hub], as this repository will serve as a working CI/CD pipeline development repository.
 
 . Log in to your Gitea web interface, with the provided login credentials.
@@ -49,31 +67,33 @@ image::../assets/images/07-ansible-cicd/gitea-repo-create.png[]
 image::../assets/images/07-ansible-cicd/gitea-reo-config.png[]
 
 
-==== 4.1.1: Clone CI/CD Pipeline Repository into DevSpaces Workspace
+==== Step 4.1.1: Clone Pipeline Repository
 
-After an empty repository is created on your Gitea, we need to clone the repository into the workspace to begin creating lab files.
-
-. Open up a new Ansible Dev Space and clone your repos into it.
-. Clone the ansible_bootcamp_ci_cd_pipeline repo you just created into your workspace
-. Clone your collection repo from the previous lab into this workspace
-. Open the integrated terminal
-. Configure your git username and email
+After creating the repository, clone it into your DevSpaces workspace to begin development.
 
 [source,bash,role=execute]
 ----
-  git config --global user.email "you@example.com"
-  git config --global user.name "Your Name"
+# Clone the CI/CD pipeline repository
+git clone https://your-gitea-instance.com/username/ansible_bootcamp_ci_cd_pipeline.git
+
+# Navigate to the repository
+cd ansible_bootcamp_ci_cd_pipeline
+
+# Configure git credentials
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
 ----
 
 image::../assets/images/07-ansible-cicd/devspaces.png[]
 
-=== 4.2: Build Tekton pipeline on OpenShift Container Platform
+=== Step 4.2: Create Tekton Pipeline Configuration
 
-. In the DevSpaces Workspace, create a new file called *collection-pipeline.yml* in the _ansible_bootcamp_ci_cd_pipeline_ directory, that we'll later push to the _ansible_bootcamp_ci_cd_pipeline_ repository
+Now we'll create the Tekton pipeline that will handle our CI/CD process.
 
-. Open file _collection-pipeline.yml_ in the DevSpaces Workspace, and copy the contents *collection-pipeline.yml* from below into the _collection-pipeline.yml_ file
+==== Step 4.2.1: Create Pipeline Definition
 
-.collection-pipeline.yml
+Create a new file called *ansible-pipeline.yaml* in the _ansible_bootcamp_ci_cd_pipeline_ directory.
+
 [%collapsible]
 ====
 [source,yaml,role=execute,title="ansible-pipeline.yaml"]
@@ -273,7 +293,7 @@ spec:
 ----
 ====
 
-==== 4.2.1: Applying collection-pipeline.yml config
+==== Step 4.2.2: Apply Pipeline Configuration
 
 . In the terminal of your DevSpaces Workspace, change into the _ansible_bootcamp_ci_cd_pipeline_ directory
 . *oc apply -f collection-pipeline.yml* with the previously created _collection-pipeline.yml_
@@ -281,9 +301,8 @@ spec:
 
 image:../assets/images/07-ansible-cicd/devspace-oc-apply.png[]
 
-==== 4.2.2: Validate collection-cluster-trigger-binding.yml config has been applied
+==== Step 4.2.3: Validate Cluster Trigger Binding
 
-[abstract]
 Validate the _collection-cluster-trigger-binding.yml_ has been successfully created in the OpenShift Container Platform GUI
 
 . In the left menu, goto the _Pipelines_ section of the menu and select *Triggers*
@@ -292,10 +311,8 @@ Validate the _collection-cluster-trigger-binding.yml_ has been successfully crea
 
 image::../assets/images/07-ansible-cicd/clustertrigger.png[]
 
+==== Step 4.2.4: Validate Pipeline Creation
 
-==== 4.2.3: Validate collection-pipeline.yml config has been applied
-
-[abstract]
 Validate the _collection-pipeline.yml_ has been successfully created in the OpenShift Container Platform GUI
 
 . In the left menu, goto the _Pipelines_ section of the menu and select *Pipelines*
@@ -304,9 +321,9 @@ Validate the _collection-pipeline.yml_ has been successfully created in the Open
 
 image:../assets/images/07-ansible-cicd/pipeline.png[]
 
-=== 4.3: Create collection-publish.yml Ansible Playbook
+=== Step 4.3: Create Collection Publish Playbook
 
-[abstract]
+Create the Ansible playbook that will handle publishing collections to Private Automation Hub.
 The _collection-pipeline.yml_ configuration file will refrence the _collection-publish.yml_ Ansible playbook several times during execution.
 
 . Add the _collection-publish.yml_ Ansible playbook to _ansible_bootcamp_ci_cd_pipeline_ Gitea repository
@@ -415,9 +432,11 @@ The _collection-pipeline.yml_ configuration file will refrence the _collection-p
 [start=2]
 . Commit all files you have created and push them to the main branch of the ansible_bootcamp_ci_cd_pipeline repo
 
-=== 4.4: Create and configure Webhook
+=== Step 4.4: Configure Pipeline Webhook
 
-==== 4.4.1: Add Pipeline Trigger
+Now we'll set up webhook integration to automatically trigger the pipeline on code changes.
+
+==== Step 4.4.1: Add Pipeline Trigger
 
 . Open your OpenShift Container Platform GUI, in the left menu, goto the _Pipelines_ section of the menu and select *Pipelines*
 . Click on the link of the _ansible-collection-ci_ pipeline that is now created
@@ -434,7 +453,7 @@ With the Add Trigger window open, enter these parameters to create the Event Lis
 
 image:../assets/images/07-ansible-cicd/trigger-config.png[]
 
-==== 4.4.2: Copy Event Listener URL
+==== Step 4.4.2: Copy Event Listener URL
 
 . Open your OpenShift Container Platform GUI, in the left menu, goto the _Pipelines_ section of the menu and select *Pipelines*
 . Click on the link of the _ansible-collection-ci_ pipeline that is now created
@@ -443,7 +462,7 @@ image:../assets/images/07-ansible-cicd/trigger-config.png[]
 image::../assets/images/07-ansible-cicd/webhook-url.png[]
 
 
-==== 4.4.3: Create Webhook on _ansible_bootcamp_ci_cd_pipeline_ Gitea repository
+==== Step 4.4.3: Create Webhook on Gitea Repository
 
 . Goto the _ansible_bootcamp_ci_cd_pipeline_ Gitea repository page and select the *Settings* tab on the right side of the window
 . Click on the _Webhooks_ section under the _Settings_ box on the left side of the window and then click the green *Add Webhook* button on the right side of the window
@@ -453,7 +472,7 @@ image::../assets/images/07-ansible-cicd/webhook-url.png[]
 
 image::../assets/images/07-ansible-cicd/gitea-webhook-config.png[]
 
-==== 4.4.4: Test Webhook
+==== Step 4.4.4: Test Webhook Integration
 
 . Goto the _ansible_bootcamp_ci_cd_pipeline_ Gitea repository page and select the *Settings* tab on the right side of the window
 . Click on the _Webhooks_ section under the _Settings_ box on the left side of the window
@@ -462,18 +481,24 @@ image::../assets/images/07-ansible-cicd/gitea-webhook-config.png[]
 
 image::../assets/images/07-ansible-cicd/gitea-webhook-test.png[]
 
-=== 4.5: Update and Push New Version of Ansible Collection to Gitea
+=== Step 4.5: Update Collection with New Content
 
-Add the dad_joke role to your collection
+Now we'll add new functionality to our collection and test the CI/CD pipeline.
 
-. Click on the Ansible extension in your Ansible dev-workspace
-. Click on role
-. Provide the path for your collection root directory
-. Name the role dad_joke
+==== Step 4.5.1: Add dad_joke Role
+
+[source,bash,role=execute]
+----
+# Create the dad_joke role using Ansible extension
+# Click on the Ansible extension in your DevSpaces workspace
+# Select "Create Role" and provide:
+# - Path: /projects/ansible_bootcamp_my_collection
+# - Name: dad_joke
+----
 
 image::../assets/images/07-ansible-cicd/devspace-role-create.png[]
 
-==== 4.5.1 Update the dad_joke role 
+==== Step 4.5.2: Implement dad_joke Role 
 
 Place the following lines in the roles/dad_joke/tasks/main.yml
 
@@ -497,18 +522,30 @@ Place the following lines in the roles/dad_joke/tasks/main.yml
 ----
 ====
 
-Open the galaxy.yml file at the root of the collection repo and increment the version number
-Commit and push your code you should now see your pipeline start to run
+==== Step 4.5.3: Update Collection Version
 
+[source,bash,role=execute]
+----
+# Open galaxy.yml and increment the version
+# Example: change version: 1.0.0 to version: 1.0.1
 
-=== 4.6: Verify that your updated collection is available in Private Automation Hub
+# Commit and push changes to trigger pipeline
+git add .
+git commit -m "Add dad_joke role and increment version"
+git push origin main
+----
 
-. Log into AAP and go to the Automation Content Section
-. Click on the Collections link and verify that the new version of your collection is present
+You should now see your CI/CD pipeline automatically trigger!
+
+=== Step 4.6: Verify Updated Collection in Private Automation Hub
+
+. Log into Private Automation Hub
+. Navigate to Collections
+. Verify that the new version of your collection is present and approved
 
 image::../assets/images/07-ansible-cicd/PAH-verify.png[]
 
-=== 4.7: Install and Use the update collection from PAH
+=== Step 4.7: Test Updated Collection Installation
 
 . Log into AAP and go to the Automation Content Section
 . Click on Repositories
@@ -557,4 +594,28 @@ image::../assets/images/07-ansible-cicd/PAH-verify.png[]
 ----
  ansible-playbook test.yml
 ----
+
+== 5. Conclusion
+
+Congratulations! You have successfully implemented a complete CI/CD pipeline for Ansible collections using:
+
+. **Tekton Pipelines**: Container-native CI/CD on OpenShift
+. **GitOps Integration**: Automated pipeline triggers from Git commits
+. **Quality Assurance**: Automated linting, testing, and publishing
+. **Private Automation Hub**: Centralized collection management and distribution
+
+Your pipeline now automatically handles the complete lifecycle of Ansible collection development, from code commit to production deployment. This ensures consistent, reliable, and secure delivery of automation content.
+
+Key achievements:
+- Automated collection building and publishing
+- Webhook-triggered pipeline execution
+- Integration with Private Automation Hub
+- End-to-end testing and validation
+
+== 6. Helpful Links
+
+. https://tekton.dev/[Tekton Pipelines Documentation]
+. https://docs.openshift.com/container-platform/latest/cicd/pipelines/understanding-openshift-pipelines.html[OpenShift Pipelines]
+. https://docs.ansible.com/ansible/latest/dev_guide/developing_collections.html[Ansible Collection Development]
+. https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/[Red Hat Ansible Automation Platform]
 

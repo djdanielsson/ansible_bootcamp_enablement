@@ -1,39 +1,223 @@
-= Automation Developer Experience 
+= Lab: Automation Developer Experience with DevSpaces
 
-This lab walks through the various aspects of launching, configuring and using DevSpaces on OpenShift as your primary development environment for Ansible.
+[abstract]
+This lab walks through the various aspects of launching, configuring and using DevSpaces on OpenShift as your primary development environment for Ansible automation development.
 
-== DevSpaces console
+== 1. Introduction: Why DevSpaces for Ansible Development?
 
-Steps to get to the console
+DevSpaces provides a cloud-based, containerized development environment that eliminates local setup complexity and ensures consistency across development teams.
 
-== DevSpaces Workspace
+.Why DevSpaces for Ansible?
 
-Steps on accessing the Workspace
+. **Pre-configured Environment**: All Ansible tools and dependencies pre-installed
+. **Collaborative**: Share workspaces and configurations with team members
+. **Scalable**: Access powerful development resources on-demand
+. **Integrated**: Built-in terminal, editor, and version control
+. **Consistent**: Same environment for all developers regardless of local setup
 
-== User Credentials in Workspaces
+== 2. Lab Setup: Accessing Your DevSpaces Environment
 
-Steps on adding custom user credentials
+Before starting, ensure you have access to your OpenShift DevSpaces environment.
 
-== Launching a Workspace from a git repo
+=== Step 2.1: Navigate to DevSpaces Console
 
-Steps to launch Workspace from git
+. Log in to your OpenShift cluster web console
+. Navigate to the Developer perspective
+. Click on "DevSpaces" in the left navigation menu
+. This will open the DevSpaces dashboard
 
-== Configuring Extensions
+=== Step 2.2: Understanding the DevSpaces Interface
 
-Configuring useful extentions
+The DevSpaces console provides:
 
-== Enabling Lightspeed
+. **Workspaces**: Your development environments
+. **Factories**: URL-based workspace creation
+. **Settings**: User preferences and configurations
 
-Steps to enable lightspeed
+== 3. Creating and Accessing Your Workspace
 
-== Accessing a Terminal
+=== Step 3.1: Launch Existing Workspace
 
-. Open a new terminal from the 
+[source,bash,role=execute]
+----
+# From the DevSpaces dashboard
+# Click on your existing ansible-bootcamp workspace
+# Click "Open" to launch the workspace
+----
 
-== Configuring ansible-navigator
+=== Step 3.2: Workspace Components
 
-Steps for ansible-navigator
+Once your workspace opens, you'll see:
 
-== Run a playbook through ansible-navigator
+. **File Explorer**: Browse and edit files
+. **Terminal**: Command line access
+. **Extensions**: VS Code extensions for Ansible
+. **Git Integration**: Version control built-in
 
-Steps to launch a playbook
+== 4. Configuring User Credentials
+
+=== Step 4.1: Adding Git Credentials
+
+[source,bash,role=execute]
+----
+# Configure git user information
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+----
+
+=== Step 4.2: SSH Key Setup (Optional)
+
+[source,bash,role=execute]
+----
+# Generate SSH key if needed
+ssh-keygen -t rsa -b 4096 -C "your.email@example.com"
+
+# Display public key for adding to git repositories
+cat ~/.ssh/id_rsa.pub
+----
+
+== 5. Working with Git Repositories
+
+=== Step 5.1: Cloning Repositories
+
+[source,bash,role=execute]
+----
+# Clone a git repository
+git clone https://your-gitea-instance.com/username/repo.git
+
+# Navigate to the repository
+cd repo
+----
+
+=== Step 5.2: Creating Repository from Template
+
+[source,bash,role=execute]
+----
+# Create new directory for your work
+mkdir ansible-project
+cd ansible-project
+
+# Initialize git repository
+git init
+----
+
+== 6. Configuring Essential Extensions
+
+=== Step 6.1: Ansible Extension
+
+The Ansible extension provides:
+
+. Syntax highlighting for YAML and Jinja2
+. Code completion for Ansible modules
+. Validation and error checking
+
+=== Step 6.2: Other Useful Extensions
+
+. **YAML**: Enhanced YAML support
+. **GitLens**: Advanced git features
+. **Prettier**: Code formatting
+
+== 7. Enabling Ansible Lightspeed (Optional)
+
+=== Step 7.1: Connect to Lightspeed
+
+[source,bash,role=execute]
+----
+# Configure Ansible Lightspeed in your workspace
+# This provides AI-assisted playbook generation
+export ANSIBLE_LIGHTSPEED_ACCESS_TOKEN="your-token-here"
+----
+
+NOTE: Ansible Lightspeed provides AI-powered suggestions for Ansible content creation.
+
+== 8. Using the Integrated Terminal
+
+=== Step 8.1: Opening Terminal
+
+. Click "Terminal" → "New Terminal" in the menu
+. The terminal opens at the bottom of the workspace
+. Use it for running Ansible commands and scripts
+
+=== Step 8.2: Terminal Features
+
+. **Multiple terminals**: Open multiple terminal sessions
+. **Split view**: Work with terminal alongside editor
+. **Command history**: Access previous commands
+
+== 9. Configuring Ansible Navigator
+
+=== Step 9.1: Ansible Navigator Setup
+
+[source,bash,role=execute]
+----
+# Check ansible-navigator installation
+ansible-navigator --version
+
+# Create ansible-navigator configuration
+cat > ansible-navigator.yml << EOF
+---
+ansible-navigator:
+  execution-environment:
+    image: registry.redhat.io/ubi9/ubi-init:latest
+  playbook-artifact:
+    enable: false
+EOF
+----
+
+=== Step 9.2: Understanding ansible-navigator
+
+Ansible Navigator provides:
+
+. **Interactive execution**: Step through playbook execution
+. **Execution environments**: Isolated Ansible execution
+. **Rich output**: Enhanced display of results
+
+== 10. Running Playbooks with Ansible Navigator
+
+=== Step 10.1: Basic Playbook Execution
+
+[source,bash,role=execute]
+----
+# Run a playbook with ansible-navigator
+ansible-navigator run playbook.yml --mode interactive
+----
+
+=== Step 10.2: Using Execution Environments
+
+[source,bash,role=execute]
+----
+# Specify execution environment
+ansible-navigator run playbook.yml \
+  --execution-environment-image registry.redhat.io/ubi9/ubi-init:latest
+----
+
+== 11. Best Practices for DevSpaces Development
+
+=== Step 11.1: Workspace Organization
+
+. Keep related projects in separate directories
+. Use consistent naming conventions
+. Commit changes regularly
+
+=== Step 11.2: Extension Management
+
+. Install only necessary extensions
+. Keep extensions updated
+. Share workspace configurations with team
+
+== 12. Conclusion
+
+You now have a fully configured Ansible development environment in DevSpaces! Key takeaways:
+
+. DevSpaces provides consistent, cloud-based development
+. Integrated tools reduce setup complexity
+. Ansible Navigator enhances playbook development and debugging
+. Proper workspace organization improves productivity
+
+This environment will serve as your primary development workspace for all subsequent labs.
+
+== 13. Helpful Links
+
+. https://access.redhat.com/documentation/en-us/red_hat_openshift_dev_spaces/[OpenShift DevSpaces Documentation]
+. https://ansible.readthedocs.io/projects/navigator/[Ansible Navigator Documentation]
+. https://docs.ansible.com/ansible/latest/user_guide/index.html[Ansible User Guide]

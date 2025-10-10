@@ -1,10 +1,7 @@
-= Ansible Automation Platform on OpenShift
+= Lab: Ansible Automation Platform on OpenShift Container Platform
 
 [abstract]
-We will take look around a working installation of the Red Hat Ansible Automation Platform on Openshift Container Platform using the AAP operator.
-
-[abstract]
-The goal will be to help to student familiarize themselves with what a working installation looks like, how to deploy their own instance of the operator, and how to customize and troubleshoot certain aspects of the AAP operator.
+We will explore a working installation of Red Hat Ansible Automation Platform on OpenShift Container Platform using the AAP operator. The goal is to familiarize you with production deployments, operator management, and troubleshooting techniques.
 
 == 1. Introduction: Why AAP on OCP?
 
@@ -274,14 +271,57 @@ You are now redirected to the `Secret details` page of the newly created secret.
 === Step 4.6: Access the deployed instance
 
 
-== 5. Exercise: Modify the `AnsibleAutomationPlatform` CR to modify the deployment
+== 5. Exercise: Customize AAP Deployment
 
-lorem ipsum
+=== Step 5.1: Modify Resource Specifications
 
-== 6. Exercise: Watch logs for operator manager pods as they reconcile
+[source,bash,role=execute]
+----
+# Edit the AAP CR to modify resource allocations
+oc edit AnsibleAutomationPlatform aap -n aap
+----
 
-lorem ipsum
+=== Step 5.2: Configure Custom Settings
 
-== 7. Exercise: Modify the default AAP containergroup spec
+Common customizations include:
+- Resource limits and requests
+- Storage class specifications
+- Ingress configurations
+- Database settings
 
-lorem ipsum
+== 6. Advanced Topics: Troubleshooting and Monitoring
+
+=== Step 6.1: Monitor Operator Logs
+
+[source,bash,role=execute]
+----
+# View operator manager pod logs
+oc logs -f deployment/aap-operator-manager -n aap
+
+# Check specific pod reconciliation logs
+oc logs -f <aap-pod-name> -n aap
+----
+
+=== Step 6.2: Common Troubleshooting Scenarios
+
+. **Pod Startup Issues**: Check resource constraints and image pull secrets
+. **Database Connection Problems**: Verify database credentials and network policies
+. **Certificate Errors**: Ensure proper TLS certificate configuration
+
+== 7. Conclusion
+
+You have successfully explored a production deployment of Ansible Automation Platform on OpenShift Container Platform! Key takeaways:
+
+. **Operator-Driven Deployment**: Kubernetes-native installation and management
+. **Multi-Component Architecture**: Integrated controller, hub, EDA, and database services
+. **Production Readiness**: High availability, scaling, and monitoring capabilities
+. **Troubleshooting Skills**: Log analysis and resource management techniques
+
+This foundation prepares you for deploying and managing AAP in enterprise environments.
+
+== 8. Helpful Links
+
+. https://docs.openshift.com/container-platform/latest/operators/understanding/crds/crd-understanding.html[Understanding CRDs]
+. https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.4/html/deploying_ansible_automation_platform_2_on_openshift_container_platform/[AAP on OCP Deployment Guide]
+. https://docs.ansible.com/ansible/latest/user_guide/index.html[Ansible User Guide]
+. https://access.redhat.com/products/red-hat-ansible-automation-platform[Red Hat Ansible Automation Platform]
