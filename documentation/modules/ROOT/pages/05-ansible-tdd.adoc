@@ -19,7 +19,7 @@ You will add a `db_server` role to an Ansible collection and configure Molecule 
 
 . Create the collection skeleton:
 
-[source,bash,role=execute]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-creator init collection ansible_bootcamp.my_collection
 cd ansible_bootcamp.my_collection
@@ -27,7 +27,7 @@ cd ansible_bootcamp.my_collection
 
 . Add the `db_server` role:
 
-[source,bash,role=execute]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 ansible-creator add resource role db_server .
 ----
@@ -38,7 +38,7 @@ ansible-creator add resource role db_server .
 
 Modify the files inside `roles/db_server/` to install and configure PostgreSQL.
 
-[source,yaml,role=execute,title="roles/db_server/defaults/main.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="roles/db_server/defaults/main.yml"]
 ----
 ---
 # defaults file for db_server
@@ -47,7 +47,7 @@ db_user: "webapp_user"
 db_password: "SecurePassword123"
 ----
 
-[source,yaml,role=execute,title="roles/db_server/tasks/main.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="roles/db_server/tasks/main.yml"]
 ----
 ---
 # tasks file for db_server
@@ -107,14 +107,14 @@ Configure Molecule to test the `db_server` role. Molecule scenarios for collecti
 . **Initialize the Molecule scenario for the db_server role:**
    From the root of your collection, run:
 
-[source,bash,role=execute]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 molecule init scenario db_server
 ----
 
 . **Update the molecule configuration:**
 
-[source,yaml,role=execute,title="extensions/molecule/db_server/molecule.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="extensions/molecule/db_server/molecule.yml"]
 ----
 ---
 dependency:
@@ -149,7 +149,7 @@ verifier:
 
 . **Update the converge playbook:**
 
-[source,yaml,role=execute,title="extensions/molecule/db_server/converge.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="extensions/molecule/db_server/converge.yml"]
 ----
 ---
 - name: Converge
@@ -162,7 +162,7 @@ verifier:
 
 . **Create the verification playbook:**
 
-[source,yaml,role=execute,title="extensions/molecule/db_server/verify.yml"]
+[source,yaml,role=execute,subs="verbatim,attributes",title="extensions/molecule/db_server/verify.yml"]
 ----
 ---
 - name: Verify
@@ -204,7 +204,7 @@ verifier:
 
 From the root of your `ansible_bootcamp.my_collection` directory, run the Molecule test for the db_server role.
 
-[source,bash,role=execute]
+[source,bash,role=execute,subs="verbatim,attributes"]
 ----
 molecule test -s db_server
 ----
